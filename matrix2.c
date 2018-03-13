@@ -2,53 +2,66 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
-// compile like:  gcc -Wall -O2 -DNROWS=10000 matrix2.c -o matrix2
+void get_walltime (double *wct);
+
+int main(int argc, const char *argv[]) {
+
+int i;
+int j;
+double start,end;
+double sum = 0;
+
+double *a = (double *) malloc(NROWS*NCOL*sizeof(double));
+
+if(a == NULL)                     
+    {
+        printf("Error! memory not allocated.");
+        exit(0);
+    }
 
 
-#define NCOLS 100
 
-void get_walltime(double *wct) {
-  struct timeval tp;
-  gettimeofday(&tp,NULL);
-  *wct = (double)(tp.tv_sec+tp.tv_usec/1000000.0);
+
+
+
+for (i = 0; i <NROWS* NCOL; i++){
+	a[i] = 3.0;
+
 }
 
+get_walltime(&start);
 
-int main() {
-double *table;
-double ts,te;
+for(i=0;i < NROWS;i++){
+	for(j=0;j < NCOL; j++){			
+		sum+= a[j*NROWS + i];
 
-
-  table = (double *)malloc(NROWS*NCOLS*sizeof(double)); 
-  if (table==NULL) {
-    printf("alloc error!\n");
-    exit(1);
-  }
-
-  // warmup
-
-  // ...your code here...
-
-  // get starting time (double, seconds) 
-  get_walltime(&ts);
-  
-  // workload
-
-  // ...your code here...
-
-  // get ending time
-  get_walltime(&te);
-
-  // check results
-  
-  // ...your code here...
-
-  // print time elapsed and/or Maccesses/sec
-  
-  // ...your code here...  
-  
-  free(table);
-
-  return 0;
+	}
 }
 
+get_walltime(&end);
+
+
+for (i = 0; i < NROWS*NCOL;i++){
+	if (sum != 3*NROWS*NCOL) {
+	printf("\nERROR ");
+	break;
+	}
+}
+
+free(a);
+
+printf (" %f ",((double)end - start));
+printf ("Megacces %f  sum = %d",(2.0 * NROWS*NCOL)/((end - start)*1e6),sum);
+
+printf("\nSUCCES\n");
+
+return 0;
+}
+
+void get_walltime (double *wct){
+struct timeval tp;
+gettimeofday(&tp,NULL);
+*wct =(double)(tp.tv_sec + tp.tv_usec/1000000.0);
+
+
+}
